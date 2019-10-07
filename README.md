@@ -1,1 +1,1 @@
-# schoolAPI
+# SchoolAPI
