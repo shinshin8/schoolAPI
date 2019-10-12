@@ -3,7 +3,7 @@ const router = express.Router();
 const {dbConn} = require('../utils/db_utils');
 const { getStudent } = require('../model/school');
 
-router.get('/', async(req, res, next) =>{
+router.get('/', async(req, res) =>{
     try {
         // クエリパラメータから生徒の出席番号を取得
         const idStr = req.query.studentId;
@@ -11,9 +11,9 @@ router.get('/', async(req, res, next) =>{
         const id = Number(idStr);
         // DBから生徒達の情報を取得
         const getSngleStudent = await getStudent(id)
-        if(!getSngleStudent){
-            return res.status(400).json({
-                message: 'cannot get student.'
+        if(!getSngleStudent.length){
+            return res.status(404).json({
+                message: 'The student can be found.'
             })
         }
         res.status(200).json({
@@ -21,7 +21,9 @@ router.get('/', async(req, res, next) =>{
         })
     } catch (error) {
         dbConn.end();
-        next();
+        return res.status(500).json({
+            msg: error
+        })
     }
 });
 

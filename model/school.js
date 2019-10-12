@@ -43,7 +43,7 @@ module.exports.createStudent = (name, height) =>{
  * @param {Number} id 生徒の出席番号
  * @returns {Object} プロミスオブジェクト
  */
-module.exports.updateStudent = id =>{
+module.exports.updateStudent = (height, id) =>{
     return new Promise((resolve, reject) =>{
         // 特定の生徒情報の更新クエリ
         const updateStudent = `UPDATE student SET height = ? WHERE id = ?`;

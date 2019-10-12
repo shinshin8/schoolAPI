@@ -3,7 +3,7 @@ const router = express.Router();
 const {dbConn} = require('../utils/db_utils');
 const { deleteStudent } = require('../model/school');
 
-router.delete('/', async(req, res, next)=>{
+router.delete('/', async(req, res)=>{
     try {
         // クエリパラメータから対象の生徒の出席番号を取得する。
         const idStr = req.query.studentId;
@@ -11,9 +11,9 @@ router.delete('/', async(req, res, next)=>{
         const studentID = Number(idStr);
         // DBからの生徒の削除処理
         const leavingSchool = await deleteStudent(studentID);
-        if(!leavingSchool){
-            return res.status(400).json({
-                msg: 'cannot delete student.'
+        if(leavingSchool.affectedRows === 0){
+            return res.status(204).json({
+                msg: 'The student has been left.'
             })
         }
         return res.status(200).json({
@@ -21,7 +21,9 @@ router.delete('/', async(req, res, next)=>{
         })
     } catch (error) {
         dbConn.end();
-        next();
+        return res.status(500).json({
+            msg: error
+        })
     }
 });
 
